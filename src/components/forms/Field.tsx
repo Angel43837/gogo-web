@@ -2,7 +2,15 @@
 
 import type { LucideIcon } from "lucide-react";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
-import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  useId,
+  useState,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from "react";
 import { cn } from "@/lib/utils";
 
 type BaseProps = {
@@ -81,7 +89,7 @@ export const Field = forwardRef<
 /** Área de texto con el mismo tratamiento visual que `Field`. */
 export const TextareaField = forwardRef<
   HTMLTextAreaElement,
-  BaseProps & InputHTMLAttributes<HTMLTextAreaElement>
+  BaseProps & TextareaHTMLAttributes<HTMLTextAreaElement>
 >(function TextareaField({ label, error, hint, required, className, ...props }, ref) {
   const id = useId();
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
@@ -105,7 +113,7 @@ export const TextareaField = forwardRef<
           error ? "border-red-500 focus:ring-red-500/30" : "border-border hover:border-primary/40",
           className,
         )}
-        {...(props as InputHTMLAttributes<HTMLTextAreaElement>)}
+        {...props}
       />
       {hint && !error && (
         <p id={`${id}-hint`} className="text-xs text-muted">
@@ -176,6 +184,74 @@ export const Checkbox = forwardRef<
           {label}
         </label>
       </div>
+      {error && (
+        <p id={`${id}-error`} className="flex items-center gap-1.5 text-xs font-medium text-red-600">
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+});
+
+/** Desplegable con el mismo tratamiento visual que `Field`. */
+export const SelectField = forwardRef<
+  HTMLSelectElement,
+  {
+    label: string;
+    error?: string;
+    hint?: string;
+    required?: boolean;
+    placeholder?: string;
+    options: readonly string[] | readonly { value: string; label: string }[];
+  } & Omit<SelectHTMLAttributes<HTMLSelectElement>, "children">
+>(function SelectField(
+  { label, error, hint, required, placeholder, options, className, ...props },
+  ref,
+) {
+  const id = useId();
+  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  const items = options.map((o) => (typeof o === "string" ? { value: o, label: o } : o));
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-bold text-foreground">
+        {label}
+        {required && <span className="ml-1 text-primary">*</span>}
+      </label>
+      <select
+        id={id}
+        ref={ref}
+        required={required}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy}
+        defaultValue=""
+        className={cn(
+          inputBase,
+          "h-12 cursor-pointer appearance-none bg-[length:1rem] bg-[right_0.9rem_center] bg-no-repeat px-3.5 pr-10",
+          error ? "border-red-500 focus:ring-red-500/30" : "border-border hover:border-primary/40",
+          className,
+        )}
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+        }}
+        {...props}
+      >
+        <option value="" disabled>
+          {placeholder ?? "Selecciona una opción"}
+        </option>
+        {items.map((item) => (
+          <option key={item.value} value={item.value}>
+            {item.label}
+          </option>
+        ))}
+      </select>
+      {hint && !error && (
+        <p id={`${id}-hint`} className="text-xs text-muted">
+          {hint}
+        </p>
+      )}
       {error && (
         <p id={`${id}-error`} className="flex items-center gap-1.5 text-xs font-medium text-red-600">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />

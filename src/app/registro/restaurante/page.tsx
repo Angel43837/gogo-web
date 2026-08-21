@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
-import { RestaurantForm } from "@/components/forms/RestaurantForm";
+import { RestaurantWizard } from "@/components/forms/RestaurantWizard";
 
 export const metadata: Metadata = {
   title: "Registra tu restaurante",
   description:
-    "Da de alta tu restaurante en GOGO: publica tu carta, recibe pedidos y apóyate en la red de repartidores.",
+    "Da de alta tu restaurante en GOGO en cinco pasos: cuenta, datos del negocio, ubicación, imágenes y confirmación.",
   alternates: { canonical: "/registro/restaurante" },
   robots: { index: false, follow: true },
 };
@@ -21,12 +21,12 @@ export default function RegistroRestaurantePage() {
             Registra tu <span className="text-brand-gradient">restaurante.</span>
           </>
         }
-        description="Completa el formulario y tu restaurante quedará listo para recibir pedidos en GOGO."
+        description="Cinco pasos cortos. Solo lo indispensable para crear tu cuenta: el menú y los productos se cargan después, desde la app para restaurantes."
       />
       <section className="bg-brand-tint">
         <div className="container py-[var(--space-section-sm)] lg:py-[var(--space-section)]">
-          <div className="mx-auto max-w-2xl">
-            <RestaurantForm />
+          <div className="mx-auto max-w-3xl">
+            <RestaurantWizard />
           </div>
         </div>
       </section>
