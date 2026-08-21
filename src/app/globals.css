@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   GOGO — SISTEMA DE DISEÑO
+   Fuente única de verdad del color de marca.
+   Cambia --color-primary y toda la web se actualiza.
+   ========================================================================== */
+
+@layer base {
+  :root {
+    /* --- Color de marca (naranja oficial GOGO: #F7500C) --- */
+    --color-primary: 247 80 12;
+    --color-primary-soft: 255 145 96;
+    --color-primary-dark: 214 62 4;
+    --color-primary-foreground: 255 255 255;
+
+    /*
+     * Escala de marca. El naranja se mantiene VIVO: nada de naranjas
+     * quemados ni degradados oscuros. Los tramos oscuros son negro neutro,
+     * no naranja apagado — así el #f7500c destaca en lugar de ensuciarse.
+     *
+     *   tint  -> naranja muy claro, texto oscuro
+     *   mid   -> el naranja oficial, con un realce mínimo
+     *   deep  -> casi negro neutro (para que el naranja resalte)
+     */
+    --color-brand-tint: 255 241 233;
+    --color-brand-tint-2: 255 227 212;
+    --color-brand-mid: 255 106 44;
+    --color-brand-mid-2: 247 80 12;
+    --color-brand-mid-3: 239 74 8;
+    --color-brand-deep: 20 17 19;
+    --color-brand-deep-2: 11 10 11;
+
+    /*
+     * Texto oscuro para escribir ENCIMA del naranja vivo.
+     * El blanco sobre #f7500c solo llega a 3.44:1, así que se reserva para
+     * titulares grandes; el cuerpo de texto usa este tono (5.9:1).
+     */
+    --color-on-brand: 40 14 2;
+
+    /* --- Acento secundario (celeste del logo: #99D4F2) --- */
+    --color-accent: 153 212 242;
+    --color-accent-soft: 216 237 249;
+
+    /* --- Neutros --- */
+    --color-background: 255 255 255;
+    --color-surface-warm: 255 248 243;
+    --color-surface: 247 247 248;
+    --color-foreground: 24 24 27;
+    --color-muted: 113 113 122;
+    --color-border: 228 228 231;
+
+    /* --- Tinta / superficies oscuras --- */
+    --color-ink: 16 16 18;
+    --color-ink-soft: 34 34 38;
+
+    /* --- Radios --- */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --radius-pill: 999px;
+
+    /* --- Sombras --- */
+    --shadow-soft: 0 1px 2px rgb(16 16 18 / 0.04), 0 4px 16px rgb(16 16 18 / 0.05);
+    --shadow-card: 0 2px 4px rgb(16 16 18 / 0.04), 0 12px 32px rgb(16 16 18 / 0.08);
+    --shadow-lift: 0 8px 20px rgb(16 16 18 / 0.08), 0 24px 60px rgb(16 16 18 / 0.12);
+    --shadow-glow: 0 12px 40px rgb(var(--color-primary) / 0.32);
+
+    /* --- Ritmo vertical --- */
+    --space-section: 7rem;
+    --space-section-sm: 4.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compensa la navbar sticky al navegar por anclas */
+    scroll-padding-top: 5.5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply text-foreground font-sans antialiased;
+    background-color: rgb(var(--color-brand-tint));
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Foco visible y coherente en toda la web (accesibilidad) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background rounded-sm;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-fg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Contenedor estándar de sección */
+  .section-shell {
+    @apply container py-[var(--space-section-sm)] lg:py-[var(--space-section)];
+  }
+
+  /* --- Superficies naranjas ---------------------------------------------
+     bg-brand      : naranja quemado medio. Texto BLANCO PURO (4.75:1).
+     bg-brand-vivid: naranja vivo de marca. Solo tipografía grande.
+     bg-brand-deep : naranja profundo. Admite blancos con opacidad.
+     bg-brand-tint : naranja muy claro. Texto oscuro.
+     --------------------------------------------------------------------- */
+  .bg-brand {
+    background-image: linear-gradient(
+      155deg,
+      rgb(var(--color-brand-mid)) 0%,
+      rgb(var(--color-brand-mid-2)) 55%,
+      rgb(var(--color-brand-mid-3)) 100%
+    );
+  }
+
+  .bg-brand-vivid {
+    background-color: rgb(var(--color-primary));
+    background-image: linear-gradient(
+      150deg,
+      rgb(var(--color-brand-mid)) 0%,
+      rgb(var(--color-primary)) 100%
+    );
+  }
+
+  .bg-brand-deep {
+    background-image: linear-gradient(
+      180deg,
+      rgb(var(--color-brand-deep)) 0%,
+      rgb(var(--color-brand-deep-2)) 100%
+    );
+  }
+
+  .bg-brand-tint {
+    background-image: linear-gradient(
+      180deg,
+      rgb(var(--color-brand-tint)) 0%,
+      rgb(var(--color-brand-tint-2)) 100%
+    );
+  }
+
+  /* Cuerpo de texto sobre naranja vivo (contraste AA). */
+  .text-on-brand {
+    color: rgb(var(--color-on-brand));
+  }
+
+  /* Texto con degradado naranja de marca */
+  .text-brand-gradient {
+    @apply bg-gradient-to-br from-primary via-primary to-primary-soft bg-clip-text text-transparent;
+  }
+
+  /* Realce de titulares sobre superficies naranjas u oscuras */
+  .text-brand-gradient-light {
+    @apply bg-gradient-to-br from-white via-white to-accent-soft bg-clip-text text-transparent;
+  }
+
+  /* Retícula sutil de fondo, aire "urbano/tecnológico" */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(var(--color-foreground) / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--color-foreground) / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .bg-grid-dark {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  /* Máscara de desvanecido para retículas y marquesinas */
+  .mask-fade-edges {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  }
+
+  /*
+   * Sobre naranja, cualquier .text-brand-gradient anidado (titulares de las
+   * páginas internas) se reescribe a celeste claro para mantener el contraste.
+   */
+  .on-brand .text-brand-gradient {
+    background-image: none;
+    -webkit-text-fill-color: rgb(var(--color-on-brand));
+    color: rgb(var(--color-on-brand));
+  }
+
+  /* Etiqueta de contenido pendiente de definir por el negocio */
+  .tag-pending {
+    @apply inline-flex items-center gap-1.5 rounded-pill border border-dashed border-primary/45
+           bg-primary/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Oculta la barra de scroll en carruseles horizontales móviles */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
