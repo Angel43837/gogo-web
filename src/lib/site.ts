@@ -3,14 +3,29 @@
  * Los enlaces externos (tiendas de apps, redes, contacto) están vacíos a propósito:
  * todavía no existen URLs oficiales y no deben inventarse.
  */
+function resolveSiteUrl(): string {
+  // Definida a mano (dominio propio o despliegue de producción).
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  // Vercel la expone en el build y en el servidor.
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "GOGO FOOD",
   shortName: "GOGO",
   tagline: "Tu comida. Tu restaurante. Tu oportunidad.",
   description:
     "GOGO conecta personas, restaurantes y repartidores en una sola plataforma de delivery. Pide lo que quieras, vende más o genera ingresos con tu moto.",
-  /** Reemplazar por el dominio oficial cuando esté disponible. */
-  url: "https://gogofood.app",
+  /**
+   * Dominio del sitio, usado en canonical, sitemap, robots y Open Graph.
+   * Se resuelve solo: variable propia -> URL del despliegue de Vercel -> local.
+   * Cuando exista el dominio oficial, basta con definir NEXT_PUBLIC_SITE_URL.
+   */
+  url: resolveSiteUrl(),
   locale: "es_MX",
 } as const;
 
