@@ -49,12 +49,16 @@ export function ImageUploader({
   guideline,
   value,
   onChange,
+  optional = true,
 }: {
-  kind: "logo" | "cover";
+  /** `profile` se comporta como `logo`: cuadrada y del mismo tamaño mínimo. */
+  kind: "logo" | "cover" | "profile";
   guideline: Guideline;
   value: PickedImage | null;
   onChange: (image: PickedImage | null) => void;
+  optional?: boolean;
 }) {
+  const square = kind !== "cover";
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -76,9 +80,9 @@ export function ImageUploader({
     try {
       const image = await readImage(file);
 
-      if (kind === "logo" && Math.min(image.width, image.height) < imageLimits.minLogo) {
+      if (square && Math.min(image.width, image.height) < imageLimits.minLogo) {
         setError(
-          `El logo es muy pequeño (${image.width}×${image.height}). Mínimo ${imageLimits.minLogo}×${imageLimits.minLogo} px.`,
+          `La imagen es muy pequeña (${image.width}×${image.height}). Mínimo ${imageLimits.minLogo}×${imageLimits.minLogo} px.`,
         );
         return;
       }
@@ -98,7 +102,7 @@ export function ImageUploader({
   const ratio = value ? value.width / value.height : 0;
   const warnRatio =
     value &&
-    ((kind === "logo" && (ratio < 0.8 || ratio > 1.25)) ||
+    ((square && (ratio < 0.8 || ratio > 1.25)) ||
       (kind === "cover" && ratio < 1.3));
 
   return (
@@ -110,9 +114,11 @@ export function ImageUploader({
           </h4>
           <p className="mt-0.5 text-xs text-muted">{guideline.hint}</p>
         </div>
-        <span className="shrink-0 rounded-pill bg-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted">
-          Opcional
-        </span>
+        {optional && (
+          <span className="shrink-0 rounded-pill bg-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted">
+            Opcional
+          </span>
+        )}
       </div>
 
       {/* Zona de carga o vista previa */}
@@ -121,7 +127,8 @@ export function ImageUploader({
           <div
             className={cn(
               "shrink-0 overflow-hidden rounded-xl border border-border bg-surface",
-              kind === "logo" ? "h-20 w-20" : "h-20 w-32",
+              square ? "h-20 w-20" : "h-20 w-32",
+              kind === "profile" && "rounded-full",
             )}
           >
             <img src={value.preview} alt="" className="h-full w-full object-cover" />
@@ -134,7 +141,7 @@ export function ImageUploader({
             {warnRatio && (
               <p className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-700">
                 <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-                {kind === "logo"
+                {square
                   ? "Se recomienda una imagen cuadrada; esta se recortará."
                   : "Se recomienda formato horizontal; esta se recortará."}
               </p>
