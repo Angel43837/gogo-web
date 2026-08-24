@@ -52,13 +52,15 @@ export function ImageUploader({
   optional = true,
 }: {
   /** `profile` se comporta como `logo`: cuadrada y del mismo tamaño mínimo. */
-  kind: "logo" | "cover" | "profile";
+  kind: "logo" | "cover" | "profile" | "document";
   guideline: Guideline;
   value: PickedImage | null;
   onChange: (image: PickedImage | null) => void;
   optional?: boolean;
 }) {
-  const square = kind !== "cover";
+  // Portadas y documentos son horizontales; logos y fotos de perfil, cuadrados.
+  const square = kind !== "cover" && kind !== "document";
+  const wide = !square;
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -86,9 +88,9 @@ export function ImageUploader({
         );
         return;
       }
-      if (kind === "cover" && image.width < imageLimits.minCoverWidth) {
+      if (wide && image.width < imageLimits.minCoverWidth) {
         setError(
-          `La portada es muy pequeña (${image.width} px de ancho). Mínimo ${imageLimits.minCoverWidth} px.`,
+          `La imagen es muy pequeña (${image.width} px de ancho). Mínimo ${imageLimits.minCoverWidth} px.`,
         );
         return;
       }
@@ -103,7 +105,7 @@ export function ImageUploader({
   const warnRatio =
     value &&
     ((square && (ratio < 0.8 || ratio > 1.25)) ||
-      (kind === "cover" && ratio < 1.3));
+      (wide && ratio < 1.3));
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 sm:p-5">

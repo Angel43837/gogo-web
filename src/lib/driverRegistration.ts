@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { mexicanStates } from "@/data/restaurantRegistration";
-import { vehicleTypes } from "@/data/driverRegistration";
+import { idTypes, vehicleTypes } from "@/data/driverRegistration";
 import { passwordField, phoneField } from "@/lib/validation";
 
 /* ==========================================================================
@@ -41,7 +41,20 @@ export const driverStep3Schema = z.object({
   vehicle: z.enum(vehicleValues, { message: "Elige cómo harás tus entregas" }),
 });
 
-/* --- Paso 5: términos ----------------------------------------------------- */
+/* --- Paso 4: identificación oficial --------------------------------------- */
+
+const idValues = idTypes.map((t) => t.value) as [string, ...string[]];
+
+export const driverStep4Schema = z.object({
+  idType: z.enum(idValues, { message: "Elige el tipo de identificación" }),
+  idNumber: z
+    .string()
+    .trim()
+    .min(5, "Escribe el número de tu identificación")
+    .max(30, "Revisa el número: parece demasiado largo"),
+});
+
+/* --- Paso 6: términos ----------------------------------------------------- */
 
 export const driverTermsSchema = z.object({
   acceptTerms: z.literal(true, {
@@ -50,6 +63,9 @@ export const driverTermsSchema = z.object({
   acceptSafety: z.literal(true, {
     message: "Debes aceptar las reglas de seguridad",
   }),
+  acceptDisclaimer: z.literal(true, {
+    message: "Debes confirmar que leíste el deslinde de responsabilidad",
+  }),
 });
 
 /* --- Tipos ---------------------------------------------------------------- */
@@ -57,12 +73,14 @@ export const driverTermsSchema = z.object({
 export type DriverStep1 = z.infer<typeof driverStep1Schema>;
 export type DriverStep2 = z.infer<typeof driverStep2Schema>;
 export type DriverStep3 = z.infer<typeof driverStep3Schema>;
+export type DriverStep4 = z.infer<typeof driverStep4Schema>;
 
 export type DriverDraft = {
   step: number;
   step1: Partial<Omit<DriverStep1, "password" | "confirm">>;
   step2: Partial<DriverStep2>;
   step3: Partial<DriverStep3>;
+  step4: Partial<DriverStep4>;
   savedAt: string;
 };
 

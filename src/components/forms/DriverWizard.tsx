@@ -9,6 +9,7 @@ import { Stepper, type StepMeta } from "@/components/forms/wizard/Stepper";
 import { DriverStepPersonal } from "@/components/forms/wizard/DriverStepPersonal";
 import { DriverStepLocation } from "@/components/forms/wizard/DriverStepLocation";
 import { DriverStepVehicle } from "@/components/forms/wizard/DriverStepVehicle";
+import { DriverStepId } from "@/components/forms/wizard/DriverStepId";
 import { DriverStepPhoto } from "@/components/forms/wizard/DriverStepPhoto";
 import { DriverStepConfirm } from "@/components/forms/wizard/DriverStepConfirm";
 import { DriverStatusTimeline } from "@/components/forms/wizard/DriverStatusTimeline";
@@ -22,6 +23,7 @@ import {
   type DriverStep1,
   type DriverStep2,
   type DriverStep3,
+  type DriverStep4,
 } from "@/lib/driverRegistration";
 
 /* ==========================================================================
@@ -31,8 +33,9 @@ import {
    resumen y simula el envío.
 
    Para conectarlo de verdad hacen falta: columnas nuevas en la tabla de
-   repartidores (ciudad, estado, vehículo, estado de la cuenta), un bucket
-   donde guardar la foto de perfil, y comprobación de teléfono duplicado.
+   repartidores (ciudad, estado, vehículo, identificación, estado de cuenta),
+   un bucket PRIVADO para la identificación y otro para la foto de perfil, y
+   comprobación de correo y teléfono duplicados.
    Después basta con poner esta constante en `false`.
    ========================================================================== */
 const SIMULATION = true;
@@ -41,8 +44,9 @@ const steps: StepMeta[] = [
   { id: 1, label: "Datos personales", short: "Datos" },
   { id: 2, label: "Ubicación", short: "Ubicación" },
   { id: 3, label: "Medio de transporte", short: "Transporte" },
-  { id: 4, label: "Foto de perfil", short: "Foto" },
-  { id: 5, label: "Revisa y confirma", short: "Confirmar" },
+  { id: 4, label: "Identificación oficial", short: "Identificación" },
+  { id: 5, label: "Foto de perfil", short: "Foto" },
+  { id: 6, label: "Revisa y confirma", short: "Confirmar" },
 ];
 
 export function DriverWizard() {
@@ -51,7 +55,10 @@ export function DriverWizard() {
   const [step1, setStep1] = useState<DriverStep1 | null>(null);
   const [step2, setStep2] = useState<DriverStep2 | null>(null);
   const [step3, setStep3] = useState<DriverStep3 | null>(null);
+  const [step4, setStep4] = useState<DriverStep4 | null>(null);
   const [photo, setPhoto] = useState<PickedImage | null>(null);
+  const [idFront, setIdFront] = useState<PickedImage | null>(null);
+  const [idBack, setIdBack] = useState<PickedImage | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -66,6 +73,7 @@ export function DriverWizard() {
     if (draft.step1) setStep1({ ...(draft.step1 as DriverStep1), password: "", confirm: "" });
     if (draft.step2) setStep2(draft.step2 as DriverStep2);
     if (draft.step3) setStep3(draft.step3 as DriverStep3);
+    if (draft.step4) setStep4(draft.step4 as DriverStep4);
     setFurthest(Math.max(draft.step ?? 1, 1));
     setRestored(true);
   }, []);
@@ -76,7 +84,7 @@ export function DriverWizard() {
 
   const persist = (
     nextStep: number,
-    data?: Partial<{ s1: DriverStep1; s2: DriverStep2; s3: DriverStep3 }>,
+    data?: Partial<{ s1: DriverStep1; s2: DriverStep2; s3: DriverStep3; s4: DriverStep4 }>,
   ) => {
     const s1 = data?.s1 ?? step1;
     saveDriverDraft({
@@ -92,6 +100,7 @@ export function DriverWizard() {
         : {},
       step2: (data?.s2 ?? step2) ?? {},
       step3: (data?.s3 ?? step3) ?? {},
+      step4: (data?.s4 ?? step4) ?? {},
       savedAt: new Date().toISOString(),
     });
   };
@@ -153,6 +162,7 @@ export function DriverWizard() {
               setStep1(null);
               setStep2(null);
               setStep3(null);
+              setStep4(null);
               setFurthest(1);
             }}
             className="shrink-0 text-xs font-bold text-primary underline underline-offset-4"
@@ -207,22 +217,41 @@ export function DriverWizard() {
             )}
 
             {step === 4 && (
-              <DriverStepPhoto
-                photo={photo}
-                onPhoto={setPhoto}
+              <DriverStepId
+                defaults={step4 ?? {}}
+                front={idFront}
+                back={idBack}
+                onFront={setIdFront}
+                onBack_={setIdBack}
                 onBack={() => setStep(3)}
-                onNext={() => advance(5)}
+                onNext={(values) => {
+                  setStep4(values);
+                  persist(5, { s4: values });
+                  advance(5);
+                }}
               />
             )}
 
-            {step === 5 && step1 && step2 && step3 && (
+            {step === 5 && (
+              <DriverStepPhoto
+                photo={photo}
+                onPhoto={setPhoto}
+                onBack={() => setStep(4)}
+                onNext={() => advance(6)}
+              />
+            )}
+
+            {step === 6 && step1 && step2 && step3 && step4 && (
               <DriverStepConfirm
                 step1={step1}
                 step2={step2}
                 step3={step3}
+                step4={step4}
                 photo={photo}
+                idFront={idFront}
+                idBack={idBack}
                 onEdit={setStep}
-                onBack={() => setStep(4)}
+                onBack={() => setStep(5)}
                 onSubmit={handleSubmit}
                 submitting={submitting}
                 error={error}
