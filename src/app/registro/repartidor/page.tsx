@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { DriverWizard } from "@/components/forms/DriverWizard";
 
 export const metadata: Metadata = {
@@ -18,7 +19,10 @@ export default function RegistroRepartidorPage() {
         eyebrow="GOGO Riders"
         title={
           <>
-            Únete a <span className="text-brand-gradient">GOGO Riders.</span>
+            Únete a{" "}
+            <span className="text-brand-gradient">
+              <InlineLogo variant="dark" /> Riders.
+            </span>
           </>
         }
         description="Cinco pasos cortos. No pedimos licencia ni papeles del vehículo: el perfil completo se termina después, desde la app para repartidores."

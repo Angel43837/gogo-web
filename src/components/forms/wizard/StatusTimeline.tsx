@@ -2,6 +2,7 @@
 
 import { AlertTriangle } from "lucide-react";
 import { FormCard } from "@/components/forms/FormShell";
+import { InlineLogo } from "@/components/ui/Logo";
 import { restaurantStatuses, type RestaurantStatus } from "@/data/restaurantRegistration";
 import { cn } from "@/lib/utils";
 
@@ -39,7 +40,7 @@ export function StatusTimeline({
         Estado de tu solicitud
       </h3>
       <p className="mt-1 text-sm text-muted">
-        Así avanza tu restaurante hasta quedar activo en GOGO.
+        Así avanza tu restaurante hasta quedar activo en <InlineLogo />.
       </p>
 
       <ol className="mt-5 space-y-3">

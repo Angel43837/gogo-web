@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { ComingSoon } from "@/components/sections/ComingSoon";
 import { PendingTag } from "@/components/ui/SectionTitle";
 
@@ -20,7 +21,11 @@ export default function ContactoPage() {
             Hablemos <span className="text-brand-gradient">pronto.</span>
           </>
         }
-        description="Estamos habilitando los canales oficiales de atención de GOGO."
+        description={
+          <>
+            Estamos habilitando los canales oficiales de atención de <InlineLogo variant="dark" />.
+          </>
+        }
       />
       <ComingSoon
         title="Formulario de contacto en preparación"

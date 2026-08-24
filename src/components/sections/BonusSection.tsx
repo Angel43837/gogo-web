@@ -2,6 +2,7 @@ import { Info } from "lucide-react";
 import { bonuses } from "@/data/bonuses";
 import { BonusCard } from "@/components/cards/BonusCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { RevealGroup, RevealItem, Reveal } from "@/components/animations/Reveal";
 
 /**
@@ -21,7 +22,12 @@ export function BonusSection() {
               <span className="text-brand-gradient">todo el ecosistema</span>
             </>
           }
-          description="Estamos definiendo los bonos y promociones de GOGO. Aquí es donde aparecerán en cuanto estén confirmados."
+          description={
+            <>
+              Estamos definiendo los bonos y promociones de <InlineLogo />. Aquí es donde aparecerán
+              en cuanto estén confirmados.
+            </>
+          }
           className="mx-auto max-w-3xl"
         />
 

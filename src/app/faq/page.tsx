@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { FAQAccordion } from "@/components/sections/FAQAccordion";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { faqs } from "@/data/faq";
@@ -32,7 +33,12 @@ export default function FaqPage() {
             Todo lo que <span className="text-brand-gradient">quieres saber.</span>
           </>
         }
-        description="Respuestas claras sobre GOGO. Lo que aún no está definido, lo señalamos como tal."
+        description={
+          <>
+            Respuestas claras sobre <InlineLogo variant="dark" />. Lo que aún no está definido, lo
+            señalamos como tal.
+          </>
+        }
       />
       <FAQAccordion />
       <FinalCTA />

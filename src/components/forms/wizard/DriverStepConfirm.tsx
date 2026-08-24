@@ -7,6 +7,7 @@ import { ClipboardCheck, Loader2, Pencil, Scale, ShieldCheck } from "lucide-reac
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "@/components/forms/Field";
+import { InlineLogo } from "@/components/ui/Logo";
 import { FormError } from "@/components/forms/FormShell";
 import { StepActions, StepHeader } from "@/components/forms/wizard/StepShell";
 import { driverDisclaimer, idTypes, vehicleTypes } from "@/data/driverRegistration";
@@ -237,7 +238,8 @@ export function DriverStepConfirm({
             </h3>
           </div>
           <p className="mt-2 text-sm text-muted">
-            Antes de continuar, lee con calma qué corre por tu cuenta al repartir con GOGO.
+            Antes de continuar, lee con calma qué corre por tu cuenta al repartir con{" "}
+            <InlineLogo />.
           </p>
 
           <ul className="mt-4 space-y-3">

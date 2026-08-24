@@ -1,6 +1,7 @@
 import { ArrowRight, Bike, Store, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { Eyebrow } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 
 const paths = [
@@ -41,7 +42,8 @@ export function FinalCTA() {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="mt-5 font-display text-[2.1rem] font-black leading-[1.05] tracking-tight text-white text-balance sm:text-5xl lg:text-[3.5rem]">
-              GOGO está listo para <span className="text-brand-gradient-light">moverse contigo.</span>
+              <InlineLogo variant="plain" /> está listo para{" "}
+              <span className="text-brand-gradient-light">moverse contigo.</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>

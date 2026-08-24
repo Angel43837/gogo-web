@@ -14,7 +14,7 @@ export function ComingSoon({
   children,
 }: {
   title: string;
-  description: string;
+  description: ReactNode;
   note?: ReactNode;
   children?: ReactNode;
 }) {

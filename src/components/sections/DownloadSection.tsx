@@ -2,6 +2,7 @@ import { Bell, Smartphone } from "lucide-react";
 import { PhoneMockup, ScreenDiscover } from "@/components/ui/PhoneMockup";
 import { StoreButtons } from "@/components/ui/StoreButtons";
 import { Eyebrow } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { Reveal } from "@/components/animations/Reveal";
 
 /**
@@ -34,7 +35,7 @@ export function DownloadSection() {
               </Reveal>
               <Reveal delay={0.05}>
                 <h2 className="mt-5 font-display text-[2.1rem] font-black leading-[1.05] tracking-tight text-white text-balance sm:text-5xl lg:text-[3.4rem]">
-                  Todo empieza con GOGO.
+                  Todo empieza con <InlineLogo variant="plain" />.
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>

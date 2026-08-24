@@ -1,6 +1,7 @@
 import { Bike, Check, Clock } from "lucide-react";
 import { driverOnboarding, driverRequirements } from "@/data/drivers";
 import { SectionTitle, PendingTag } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { CTAButton } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 import { cn } from "@/lib/utils";
@@ -76,7 +77,8 @@ export function DriverSection() {
                 </ul>
                 <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-relaxed text-white/45">
                   Los requisitos marcados como &laquo;por definir&raquo; se publicarán aquí cuando estén
-                  confirmados. GOGO no promete ingresos, horarios ni condiciones que todavía no existen.
+                  confirmados. <InlineLogo variant="plain" /> no promete ingresos, horarios ni
+                  condiciones que todavía no existen.
                 </p>
               </div>
             </Reveal>

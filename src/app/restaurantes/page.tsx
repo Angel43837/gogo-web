@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Store } from "lucide-react";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { BusinessSection } from "@/components/sections/BusinessSection";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { FinalCTA } from "@/components/sections/FinalCTA";
@@ -25,7 +26,12 @@ export default function RestaurantesPage() {
             Tu restaurante merece <span className="text-brand-gradient">llegar más lejos.</span>
           </>
         }
-        description="Suma tu restaurante a GOGO y conecta con personas que todavía no te conocen."
+        description={
+          <>
+            Suma tu restaurante a <InlineLogo variant="dark" /> y conecta con personas que todavía
+            no te conocen.
+          </>
+        }
         actions={
           <CTAButton href={futureRoutes.registroRestaurante} variant="onBrand" size="lg">
             <Store className="h-5 w-5" aria-hidden />

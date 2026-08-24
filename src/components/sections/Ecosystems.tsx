@@ -1,6 +1,7 @@
 import { ecosystems } from "@/data/ecosystems";
 import { EcosystemCard } from "@/components/cards/EcosystemCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { RevealGroup, RevealItem } from "@/components/animations/Reveal";
 
 /** Los tres ecosistemas: usuarios, restaurantes y repartidores. */
@@ -13,7 +14,10 @@ export function Ecosystems() {
           eyebrow="Tres formas de participar"
           title={
             <>
-              Elige cómo quieres <span className="text-brand-gradient-light">moverte con GOGO</span>
+              Elige cómo quieres{" "}
+              <span className="text-brand-gradient-light">
+                moverte con <InlineLogo variant="plain" />
+              </span>
             </>
           }
           description="Pide lo que se te antoje, lleva tu restaurante más lejos o convierte tu moto en una fuente de ingresos."

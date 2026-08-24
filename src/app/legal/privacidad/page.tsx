@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { ComingSoon } from "@/components/sections/ComingSoon";
 
 export const metadata: Metadata = {
@@ -19,7 +20,12 @@ export default function PrivacidadPage() {
       />
       <ComingSoon
         title="Documento en preparación"
-        description="El aviso de privacidad de GOGO se publicará en esta página una vez redactado y revisado conforme a la normativa aplicable."
+        description={
+          <>
+            El aviso de privacidad de <InlineLogo /> se publicará en esta página una
+            vez redactado y revisado conforme a la normativa aplicable.
+          </>
+        }
       />
     </>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { DownloadSection } from "@/components/sections/DownloadSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
@@ -18,7 +19,10 @@ export default function DescargaPage() {
         eyebrow="Descarga"
         title={
           <>
-            Todo empieza <span className="text-brand-gradient">con GOGO.</span>
+            Todo empieza{" "}
+            <span className="text-brand-gradient">
+              con <InlineLogo variant="dark" />.
+            </span>
           </>
         }
         description="Estamos preparando la publicación de la app. Cuando los enlaces oficiales existan, aparecerán en esta página."

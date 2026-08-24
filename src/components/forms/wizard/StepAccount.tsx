@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Lock, Mail, Phone, ShieldCheck, User, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Field, PasswordField } from "@/components/forms/Field";
+import { InlineLogo } from "@/components/ui/Logo";
 import { passwordStrength, step1Schema, type Step1 } from "@/lib/restaurantRegistration";
 import { cn } from "@/lib/utils";
 import { StepActions, StepHeader } from "@/components/forms/wizard/StepShell";
@@ -35,7 +36,12 @@ export function StepAccount({
       <StepHeader
         icon={User}
         title="Datos del responsable"
-        description="La persona que administrará el restaurante en GOGO. Con estos datos se crea la cuenta de acceso."
+        description={
+          <>
+            La persona que administrará el restaurante en <InlineLogo />. Con estos datos se crea la
+            cuenta de acceso.
+          </>
+        }
       />
 
       <div className="flex flex-col gap-4">

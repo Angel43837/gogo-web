@@ -2,6 +2,7 @@ import { ArrowRight, Store } from "lucide-react";
 import { businessBenefits, businessOnboarding } from "@/data/businesses";
 import { FeatureCard } from "@/components/cards/FeatureCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { CTAButton } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 
@@ -21,7 +22,12 @@ export function BusinessSection() {
                   <span className="text-brand-gradient">llegar más lejos.</span>
                 </>
               }
-              description="Publica tu carta, recibe pedidos y apóyate en la red de repartidores GOGO. Tú te concentras en preparar; nosotros movemos el resto."
+              description={
+                <>
+                  Publica tu carta, recibe pedidos y apóyate en la red de repartidores{" "}
+                  <InlineLogo />. Tú te concentras en preparar; nosotros movemos el resto.
+                </>
+              }
             />
 
             <Reveal delay={0.15} className="mt-8">
@@ -67,7 +73,8 @@ export function BusinessSection() {
             <RevealItem as="li" className="sm:col-span-2">
               <div className="bg-brand flex flex-col items-start gap-4 rounded-2xl p-6 text-white shadow-card sm:flex-row sm:items-center sm:justify-between">
                 <p className="max-w-sm text-sm font-medium leading-relaxed text-onBrand">
-                  ¿Listo para que más personas encuentren tu restaurante dentro de GOGO?
+                  ¿Listo para que más personas encuentren tu restaurante dentro de{" "}
+                  <InlineLogo variant="dark" />?
                 </p>
                 <CTAButton href="/restaurantes" variant="onBrand" size="md" className="shrink-0">
                   Registra tu restaurante

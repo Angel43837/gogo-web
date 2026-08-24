@@ -4,6 +4,7 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "fr
 import { useRef } from "react";
 import { processSteps } from "@/data/process";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { cn } from "@/lib/utils";
 
 const actorTone: Record<string, string> = {
@@ -39,7 +40,12 @@ export function ProcessTimeline() {
               <span className="text-brand-gradient">en cinco pasos</span>
             </>
           }
-          description="Así se mueve un pedido dentro de GOGO, desde que alguien decide qué quiere hasta que lo recibe."
+          description={
+            <>
+              Así se mueve un pedido dentro de <InlineLogo />, desde que alguien decide qué quiere
+              hasta que lo recibe.
+            </>
+          }
           className="mx-auto max-w-3xl"
         />
 
