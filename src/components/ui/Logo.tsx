@@ -20,12 +20,25 @@ const INLINE_WORDMARKS = {
   food: { src: "/logo/gogo-wordmark-food.png", width: 2210, height: 888, alt: "GOGO FOOD" },
 } as const;
 
+/**
+ * Los tres lockups oficiales disponibles.
+ * `food` es el horizontal completo: el que mejor funciona en barras de
+ * navegación y pies de página, donde el apilado queda pequeño e ilegible.
+ */
+const LOCKUPS = {
+  stacked: { src: "/logo/gogo-logo.svg", width: 312, height: 362, alt: "GOGO FOOD" },
+  horizontal: { src: "/logo/gogo-wordmark.png", width: 2210, height: 569, alt: "GOGO" },
+  food: { src: "/logo/gogo-wordmark-food.png", width: 2210, height: 888, alt: "GOGO FOOD" },
+} as const;
+
 type LogoProps = {
   /**
    * `badge`: el logotipo oficial sobre la placa naranja de marca (para fondos claros).
    * `light`: el logotipo tal cual, para fondos oscuros o naranjas.
    */
   variant?: "badge" | "light";
+  /** Qué versión del logotipo usar. */
+  lockup?: keyof typeof LOCKUPS;
   className?: string;
   /** Alto del logotipo en px. */
   size?: number;
@@ -38,12 +51,19 @@ type LogoProps = {
  * Se usa siempre el archivo original: no se recolorea, no se recorta
  * y se mantiene su proporción con `object-contain`.
  */
-export function Logo({ variant = "badge", className, size = 44, href = "/", priority }: LogoProps) {
-  // Proporción del archivo original (312.08 × 361.54).
-  const ratio = 312.08 / 361.54;
+export function Logo({
+  variant = "badge",
+  lockup = "food",
+  className,
+  size = 44,
+  href = "/",
+  priority,
+}: LogoProps) {
+  const mark = LOCKUPS[lockup];
+  const ratio = mark.width / mark.height;
   const padding = variant === "badge" ? size * 0.13 : 0;
   const boxHeight = size;
-  const boxWidth = variant === "badge" ? size * ratio + padding * 2 : size * ratio;
+  const boxWidth = size * ratio + padding * 2;
 
   const content = (
     <span
@@ -56,11 +76,12 @@ export function Logo({ variant = "badge", className, size = 44, href = "/", prio
       style={{ width: boxWidth, height: boxHeight, padding }}
     >
       <Image
-        src="/logo/gogo-logo.svg"
-        alt="GOGO FOOD"
-        width={312}
-        height={362}
+        src={mark.src}
+        alt={mark.alt}
+        width={mark.width}
+        height={mark.height}
         priority={priority}
+        sizes="320px"
         className="h-full w-auto object-contain"
       />
     </span>
