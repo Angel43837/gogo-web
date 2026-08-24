@@ -57,7 +57,7 @@ export function Navbar() {
           scrolled ? "h-16" : "h-20",
         )}
       >
-        <Logo variant="light" size={scrolled ? 40 : 48} priority />
+        <Logo variant="light" lockup="stacked" size={scrolled ? 40 : 48} priority />
 
         {/* Enlaces — desktop */}
         <ul className="hidden items-center gap-1 lg:flex">
