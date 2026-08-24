@@ -6,11 +6,9 @@
  * quitarle el audio y dejarlo ligero.
  *
  * Qué hace:
- *  1. RECORTA el cromo del navegador (barra de estado + URL arriba, barra de
- *     herramientas abajo) para que parezca la app y no una captura de Safari.
- *  2. CORTA los primeros segundos, donde la lista muestra marcas de terceros
- *     (Starbucks, McDonald's). Publicarlas en la web de GOGO daría a entender
- *     una alianza comercial; ver TRIM_START abajo.
+ *  1. RECORTA el cromo del navegador si lo hubiera (barras de Safari), para
+ *     que parezca la app y no una captura del navegador. Ver CROP.
+ *  2. RECORTA el clip a la parte útil (TRIM_START / TRIM_DURATION).
  *  3. Quita el audio y aplica faststart.
  *
  * Uso:  npm run demo
@@ -26,18 +24,17 @@ const SOURCE_DIR = "video demo app";
 const OUTPUT = path.join("public", "video", "app-demo.mp4");
 const POSTER = path.join("public", "video", "app-demo-poster.jpg");
 
-/** Segundo en el que empieza el recorte (ya no se ven marcas de terceros). */
-const TRIM_START = 6.5;
+/** Segundo en el que empieza el recorte. */
+const TRIM_START = 0;
 
 /** Duración del clip resultante, en segundos. */
-const TRIM_DURATION = 17.5;
+const TRIM_DURATION = 29;
 
 /**
- * Recorte del cromo del navegador, en píxeles del original (384x832):
- * `ancho:alto:x:y`. Arriba se van 90 px (estado + URL) y abajo 80 px
- * (barra de herramientas de Safari).
+ * Recorte del cromo del navegador, en píxeles del original: `ancho:alto:x:y`.
+ * `null` cuando la grabación ya viene limpia, sin barras del navegador.
  */
-const CROP = "384:662:0:90";
+const CROP = null;
 
 /** Calidad: más bajo = mejor imagen y más peso. */
 const CRF = 26;
@@ -58,7 +55,7 @@ const input = path.join(SOURCE_DIR, source);
 mkdirSync(path.dirname(OUTPUT), { recursive: true });
 
 console.log(`Origen:  ${input}`);
-console.log(`Recorte: desde ${TRIM_START}s, ${TRIM_DURATION}s, crop ${CROP}`);
+console.log(`Recorte: desde ${TRIM_START}s, ${TRIM_DURATION}s, crop ${CROP ?? "sin recorte"}`);
 
 execFileSync(
   ffmpegPath,
@@ -68,7 +65,7 @@ execFileSync(
     "-ss", String(TRIM_START),
     "-t", String(TRIM_DURATION),
     "-i", input,
-    "-vf", `crop=${CROP}`,
+    ...(CROP ? ["-vf", "crop=" + CROP] : []),
     // Sin audio: el video va silenciado en la web.
     "-an",
     "-c:v", "libx264",

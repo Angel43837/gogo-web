@@ -20,9 +20,12 @@ const APP_ORANGE = "#F04E0C";
  * Si vuelves a grabar el video, ajusta estos valores.
  */
 export const demoChapters = {
+  /** Portada con el logotipo y el listado de restaurantes. */
   descubre: 0,
-  elige: 0.5,
-  pide: 8,
+  /** Restaurante abierto y ficha del producto. */
+  elige: 7,
+  /** Carrito y confirmación del pedido. */
+  pide: 16,
 } as const;
 
 export function ScreenAppDemo({ seekTo }: { seekTo?: number }) {

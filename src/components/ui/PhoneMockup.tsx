@@ -1,13 +1,17 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import {
   ArrowLeft,
   Battery,
   Bike,
-  ChevronRight,
   CircleCheck,
   Hourglass,
   MapPin,
+  Menu,
   Search,
+  ShoppingBag,
+  SlidersHorizontal,
+  ThumbsUp,
   Signal,
   Store,
   UtensilsCrossed,
@@ -332,120 +336,112 @@ export function ScreenTracking() {
   );
 }
 
+
 /* --------------------------------------------------------------------------
-   Pantalla 2 — Descubrir restaurantes
-   Mismo lenguaje visual que la pantalla real: tema oscuro, naranja de marca.
+   Pantalla 2 — Inicio de la app (recreada, no es una captura)
+
+   Reproduce la portada real: cabecera con perfil, el logotipo grande
+   centrado, el saludo y el listado de restaurantes con sus "me gusta".
+
+   Los nombres son ficticios a propósito. En la app real aparecen marcas de
+   terceros; publicarlas en la web de GOGO daría a entender una alianza
+   comercial que no existe.
    -------------------------------------------------------------------------- */
 
-export function ScreenDiscover() {
-  const categories = ["Antojitos", "Pizza", "Postres", "Mariscos"];
+/** Naranja de fondo de la app. */
+const APP_BG = "#F04E0C";
 
+const featured = [
+  { name: "Tacos El Güero", likes: 3 },
+  { name: "La Pizzería", likes: 2 },
+  { name: "Hot Dogs El Güero", likes: 1 },
+  { name: "Nieves Lupita", likes: 1 },
+  { name: "Postres Dulce Hogar", likes: 0 },
+];
+
+/** Avatar neutro: no se usa la fotografía de ninguna persona real. */
+function Avatar({ size }: { size: string }) {
   return (
-    <div className="relative flex h-full flex-col" style={{ backgroundColor: "#0F0F11" }}>
+    <span
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full font-black text-white",
+        size,
+      )}
+      style={{ background: "linear-gradient(140deg, #FFB48F, #C7410A)" }}
+      aria-hidden
+    >
+      L
+    </span>
+  );
+}
+
+export function ScreenDiscover() {
+  return (
+    <div
+      className="relative flex h-full flex-col overflow-hidden"
+      style={{ backgroundColor: APP_BG }}
+    >
       <StatusBar tone="light" />
 
-      <div className="flex flex-col gap-2.5 px-3 pb-3 pt-[2.2rem]">
-        {/* Dirección de entrega */}
-        <div className="flex items-center gap-1.5">
-          <MapPin className="h-3 w-3" style={{ color: app.orange }} />
-          <span className="text-[9px] font-bold text-white">Entregar en</span>
-          <span className="text-[9px]" style={{ color: app.muted }}>
-            Tu dirección
+      {/* Cabecera */}
+      <div className="flex items-center gap-2 px-3 pt-[2.1rem]">
+        <Avatar size="h-7 w-7 text-[10px]" />
+        <span className="min-w-0 flex-1 leading-tight">
+          <span className="block truncate text-[11px] font-black tracking-tight text-white">
+            GOGO FOOD
           </span>
-          <ChevronRight className="ml-auto h-3 w-3" style={{ color: app.muted }} />
-        </div>
-
-        {/* Buscador */}
-        <div
-          className="flex items-center gap-2 rounded-xl px-2.5 py-2"
-          style={{ backgroundColor: app.sheetSoft }}
-        >
-          <Search className="h-3 w-3" style={{ color: app.muted }} />
-          <span className="text-[9px]" style={{ color: app.muted }}>
-            Buscar restaurantes o platillos
-          </span>
-        </div>
-
-        {/* Categorías */}
-        <div className="flex gap-1.5">
-          {categories.map((category, i) => (
-            <span
-              key={category}
-              className="rounded-pill px-2.5 py-1 text-[8px] font-bold"
-              style={
-                i === 0
-                  ? { backgroundColor: app.orange, color: "#FFFFFF" }
-                  : { backgroundColor: app.sheetSoft, color: app.muted }
-              }
-            >
-              {category}
-            </span>
-          ))}
-        </div>
-
-        {/* Destacado */}
-        <div
-          className="relative h-[4.6rem] shrink-0 overflow-hidden rounded-xl p-2.5"
-          style={{ backgroundColor: app.orange }}
-        >
-          <p className="text-[8px] font-black uppercase tracking-wide text-white/85">Destacado</p>
-          <p className="mt-0.5 font-display text-[13px] font-black leading-tight text-white">
-            Lo que se te
-            <br />
-            antoja, cerca.
-          </p>
-          <div className="absolute -bottom-5 -right-4 h-16 w-16 rounded-full bg-white/15" />
-        </div>
-
-        {/* Listado */}
-        <div className="flex flex-col gap-1.5">
-          {[
-            { name: "Tacos El Güero", tag: "Antojitos · 20-30 min" },
-            { name: "La Pizzería", tag: "Pizza · 25-35 min" },
-            { name: "Postres Lupita", tag: "Postres · 15-25 min" },
-          ].map((item) => (
-            <div
-              key={item.name}
-              className="flex items-center gap-2 rounded-xl p-1.5"
-              style={{ backgroundColor: app.sheetSoft }}
-            >
-              <span
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-                style={{ backgroundColor: app.orangeSoft }}
-              >
-                <Store className="h-3.5 w-3.5" style={{ color: app.orange }} />
-              </span>
-              <span className="min-w-0 flex-1 leading-tight">
-                <span className="block truncate text-[9.5px] font-bold text-white">{item.name}</span>
-                <span className="block truncate text-[8px]" style={{ color: app.muted }}>
-                  {item.tag}
-                </span>
-              </span>
-              <ChevronRight className="h-3 w-3 shrink-0" style={{ color: app.muted }} />
-            </div>
-          ))}
-        </div>
+          <span className="block truncate text-[8.5px] text-white/70">Hola, Ldmh</span>
+        </span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white">
+          <ShoppingBag className="h-3 w-3" style={{ color: APP_BG }} />
+        </span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white">
+          <Menu className="h-3 w-3" style={{ color: APP_BG }} />
+        </span>
       </div>
 
-      {/* Barra de navegación inferior */}
-      <div
-        className="mt-auto flex items-center justify-around border-t px-2 py-2.5"
-        style={{ borderColor: app.divider, backgroundColor: app.sheet }}
-      >
-        {[
-          { icon: Search, label: "Explorar", active: true },
-          { icon: UtensilsCrossed, label: "Pedidos", active: false },
-          { icon: MapPin, label: "Seguir", active: false },
-        ].map((tab) => (
-          <span key={tab.label} className="flex flex-col items-center gap-0.5">
-            <tab.icon className="h-3.5 w-3.5" style={{ color: tab.active ? app.orange : app.muted }} />
-            <span
-              className="text-[7px] font-bold"
-              style={{ color: tab.active ? app.orange : app.muted }}
-            >
-              {tab.label}
+      {/* Logotipo grande, tal como lo muestra la app */}
+      <div className="flex justify-center px-3 pt-4">
+        <Image
+          src="/logo/gogo-logo.svg"
+          alt="GOGO FOOD"
+          width={312}
+          height={362}
+          className="h-[4.6rem] w-auto object-contain"
+        />
+      </div>
+
+      {/* Saludo */}
+      <div className="mt-2.5 flex items-center justify-center gap-1.5">
+        <Avatar size="h-5 w-5 text-[8px]" />
+        <span className="text-[10px] font-semibold text-white">Hola, Ldmh 👋</span>
+      </div>
+
+      {/* Filtro y búsqueda */}
+      <div className="mt-3 flex items-center justify-between px-3">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm">
+          <SlidersHorizontal className="h-3.5 w-3.5" style={{ color: APP_BG }} />
+        </span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/25">
+          <Search className="h-3.5 w-3.5 text-white" />
+        </span>
+      </div>
+
+      {/* Listado de restaurantes */}
+      <div className="mt-2.5 flex flex-col gap-1.5 overflow-hidden px-3 pb-3">
+        {featured.map((place) => (
+          <div
+            key={place.name}
+            className="flex items-center gap-2 rounded-xl bg-white/12 px-2.5 py-2 shadow-sm"
+          >
+            <span className="min-w-0 flex-1 truncate text-[10.5px] font-bold text-white">
+              {place.name}
             </span>
-          </span>
+            <span className="flex shrink-0 items-center gap-1 rounded-md bg-white/20 px-1.5 py-0.5">
+              <ThumbsUp className="h-2.5 w-2.5 text-white" />
+              <span className="text-[8.5px] font-bold text-white">{place.likes}</span>
+            </span>
+          </div>
         ))}
       </div>
     </div>
