@@ -34,8 +34,8 @@ import {
 
    Para conectarlo de verdad hacen falta: columnas nuevas en la tabla de
    repartidores (ciudad, estado, vehículo, identificación, estado de cuenta),
-   un bucket PRIVADO para la identificación y otro para la foto de perfil, y
-   comprobación de correo y teléfono duplicados.
+   un bucket PRIVADO para la identificación y el comprobante de domicilio,
+   otro público para la foto de perfil, y comprobación de duplicados.
    Después basta con poner esta constante en `false`.
    ========================================================================== */
 const SIMULATION = true;
@@ -59,6 +59,7 @@ export function DriverWizard() {
   const [photo, setPhoto] = useState<PickedImage | null>(null);
   const [idFront, setIdFront] = useState<PickedImage | null>(null);
   const [idBack, setIdBack] = useState<PickedImage | null>(null);
+  const [proofOfAddress, setProofOfAddress] = useState<PickedImage | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -221,8 +222,10 @@ export function DriverWizard() {
                 defaults={step4 ?? {}}
                 front={idFront}
                 back={idBack}
+                proof={proofOfAddress}
                 onFront={setIdFront}
                 onBack_={setIdBack}
+                onProof={setProofOfAddress}
                 onBack={() => setStep(3)}
                 onNext={(values) => {
                   setStep4(values);
@@ -250,6 +253,7 @@ export function DriverWizard() {
                 photo={photo}
                 idFront={idFront}
                 idBack={idBack}
+                proofOfAddress={proofOfAddress}
                 onEdit={setStep}
                 onBack={() => setStep(5)}
                 onSubmit={handleSubmit}

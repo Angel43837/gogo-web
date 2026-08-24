@@ -71,6 +71,7 @@ export function DriverStepConfirm({
   photo,
   idFront,
   idBack,
+  proofOfAddress,
   onEdit,
   onSubmit,
   onBack,
@@ -84,6 +85,7 @@ export function DriverStepConfirm({
   photo: PickedImage | null;
   idFront: PickedImage | null;
   idBack: PickedImage | null;
+  proofOfAddress: PickedImage | null;
   onEdit: (step: number) => void;
   onSubmit: () => void;
   onBack: () => void;
@@ -128,7 +130,7 @@ export function DriverStepConfirm({
         </Block>
 
         <Block title="Medio de transporte" onEdit={() => onEdit(3)}>
-          <Row label="Vehículo" value={vehicle ? `${vehicle.emoji} ${vehicle.label}` : null} />
+          <Row label="Vehículo" value={vehicle?.label} />
         </Block>
 
         <Block title="Identificación oficial" onEdit={() => onEdit(4)}>
@@ -137,6 +139,10 @@ export function DriverStepConfirm({
           <Row
             label="Fotografías"
             value={idFront && idBack ? "Frente y reverso cargados" : "Incompletas"}
+          />
+          <Row
+            label="Comprobante de domicilio"
+            value={proofOfAddress ? proofOfAddress.name : "Sin cargar"}
           />
         </Block>
 

@@ -6,7 +6,12 @@ import { useForm } from "react-hook-form";
 import { Field } from "@/components/forms/Field";
 import { ImageUploader } from "@/components/forms/wizard/ImageUploader";
 import { StepActions, StepHeader } from "@/components/forms/wizard/StepShell";
-import { idGuidelines, idTypes } from "@/data/driverRegistration";
+import {
+  idGuidelines,
+  idTypes,
+  proofOfAddressGuideline,
+  proofOfAddressTypes,
+} from "@/data/driverRegistration";
 import { driverStep4Schema, type DriverStep4 } from "@/lib/driverRegistration";
 import type { PickedImage } from "@/lib/restaurantRegistration";
 import { cn } from "@/lib/utils";
@@ -21,17 +26,21 @@ export function DriverStepId({
   defaults,
   front,
   back,
+  proof,
   onFront,
   onBack_,
+  onProof,
   onNext,
   onBack,
 }: {
   defaults: Partial<DriverStep4>;
   front: PickedImage | null;
   back: PickedImage | null;
+  proof: PickedImage | null;
   onFront: (image: PickedImage | null) => void;
   /** Cambia la foto del reverso. */
   onBack_: (image: PickedImage | null) => void;
+  onProof: (image: PickedImage | null) => void;
   onNext: (values: DriverStep4) => void;
   onBack: () => void;
 }) {
@@ -47,15 +56,15 @@ export function DriverStepId({
   });
 
   const selected = watch("idType");
-  // Sin las dos caras del documento no se puede verificar la identidad.
-  const canContinue = isValid && Boolean(front) && Boolean(back);
+  // Sin las dos caras del documento y el comprobante no se puede verificar.
+  const canContinue = isValid && Boolean(front) && Boolean(back) && Boolean(proof);
 
   return (
     <form onSubmit={handleSubmit(onNext)} noValidate className="flex flex-col gap-7">
       <StepHeader
         icon={IdCard}
-        title="Identificación oficial"
-        description="Necesitamos verificar que eres quien dices ser antes de activar tu cuenta."
+        title="Identificación y domicilio"
+        description="Necesitamos verificar quién eres y dónde vives antes de activar tu cuenta."
       />
 
       <div className="flex flex-col gap-5">
@@ -117,6 +126,33 @@ export function DriverStepId({
           />
         </div>
 
+        {/* Comprobante de domicilio */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <p className="text-sm font-bold text-foreground">
+              Comprobante de domicilio <span className="text-primary">*</span>
+            </p>
+            <p className="mt-1 text-xs text-muted">Sirve cualquiera de estos:</p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {proofOfAddressTypes.map((type) => (
+                <span
+                  key={type}
+                  className="rounded-pill bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted"
+                >
+                  {type}
+                </span>
+              ))}
+            </div>
+          </div>
+          <ImageUploader
+            kind="document"
+            guideline={proofOfAddressGuideline}
+            value={proof}
+            onChange={onProof}
+            optional={false}
+          />
+        </div>
+
         {/* Uso de los datos */}
         <div className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
           <p className="flex items-center gap-2 text-sm font-bold text-foreground">
@@ -126,7 +162,7 @@ export function DriverStepId({
           <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">
             <li className="flex items-start gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-              Se usa únicamente para verificar tu identidad antes de activarte.
+              Se usan únicamente para verificar tu identidad y tu domicilio antes de activarte.
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
@@ -147,8 +183,8 @@ export function DriverStepId({
           <p className="flex items-start gap-2.5 rounded-2xl bg-amber-50 p-3.5 text-xs leading-relaxed text-amber-900">
             <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
             <span>
-              Para continuar necesitamos el tipo, el número y las <strong>dos caras</strong> del
-              documento.
+              Para continuar necesitamos el tipo, el número, las <strong>dos caras</strong> de tu
+              identificación y el <strong>comprobante de domicilio</strong>.
             </span>
           </p>
         )}

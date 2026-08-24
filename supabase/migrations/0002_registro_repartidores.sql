@@ -1,18 +1,20 @@
 -- =============================================================================
 -- GOGO — Registro de repartidores
 --
--- Crea el bucket PRIVADO donde se guardan las identificaciones oficiales.
+-- Crea el bucket PRIVADO donde se guardan la identificación oficial y el
+-- comprobante de domicilio.
 --
 -- CÓMO APLICARLO
 --   Panel de Supabase -> SQL Editor -> pegar este archivo -> Run.
 --
 -- IMPORTANTE: a diferencia del bucket de restaurantes, este NO es público.
--- Una identificación oficial es un dato personal sensible: solo debe poder
--- verla su dueño y el personal de revisión (service_role).
+-- Una identificación oficial y un comprobante de domicilio son datos
+-- personales sensibles: solo deben poder verlos su dueño y el personal de
+-- revisión (service_role).
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- 1. Bucket privado para identificaciones
+-- 1. Bucket privado para identificación y comprobante de domicilio
 -- -----------------------------------------------------------------------------
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -27,6 +29,7 @@ on conflict (id) do nothing;
 
 -- Cada repartidor solo puede subir dentro de su propia carpeta:
 --   identificaciones/<uid>/frente.jpg
+--   identificaciones/<uid>/domicilio.jpg
 drop policy if exists "identificaciones_subida_propia" on storage.objects;
 create policy "identificaciones_subida_propia"
   on storage.objects for insert
@@ -116,6 +119,8 @@ create table if not exists public.drivers (
   -- Solo las rutas dentro del bucket privado, nunca el contenido.
   id_front_path text,
   id_back_path  text,
+  -- Comprobante de domicilio, en el mismo bucket privado.
+  proof_of_address_path text,
   photo_url     text,
   status        text not null default 'en_revision',
   -- Constancia de las tres aceptaciones del registro.

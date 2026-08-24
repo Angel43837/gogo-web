@@ -1,5 +1,9 @@
+import type { ComponentType, SVGProps } from "react";
 import type { LucideIcon } from "lucide-react";
+import { Motorcycle } from "@/components/ui/icons";
 import {
+  Bike,
+  Car,
   BadgeCheck,
   Ban,
   FileEdit,
@@ -19,28 +23,36 @@ import {
  * Medios de transporte admitidos.
  * La estructura está preparada para ampliar: basta con añadir una entrada.
  * El vehículo solo sirve para decidir qué pedidos y zonas encajan con el
- * repartidor — NO se piden documentos ni licencia en el registro web.
+ * repartidor — NO se piden documentos DEL VEHÍCULO (tarjeta de circulación,
+ * póliza, factura). La licencia sí se admite, pero como identificación.
  */
-export const vehicleTypes = [
+type VehicleIcon = ComponentType<SVGProps<SVGSVGElement>>;
+
+export const vehicleTypes: {
+  value: string;
+  icon: VehicleIcon;
+  label: string;
+  detail: string;
+}[] = [
   {
     value: "motocicleta",
-    emoji: "🏍️",
+    icon: Motorcycle,
     label: "Motocicleta",
     detail: "Mayor alcance y más pedidos por jornada",
   },
   {
     value: "automovil",
-    emoji: "🚗",
+    icon: Car,
     label: "Automóvil",
     detail: "Ideal para pedidos grandes o de varios restaurantes",
   },
   {
     value: "bicicleta",
-    emoji: "🚲",
+    icon: Bike,
     label: "Bicicleta",
     detail: "Perfecta para distancias cortas dentro del centro",
   },
-] as const;
+];
 
 export type VehicleValue = (typeof vehicleTypes)[number]["value"];
 
@@ -175,13 +187,17 @@ export const photoGuideline = {
 
 /**
  * Documentos admitidos para verificar la identidad.
- * NO se incluye la licencia de conducir a propósito: aunque en México es una
- * identificación válida, el encargo pidió expresamente no solicitarla.
+ * La licencia de conducir se acepta aquí como identificación oficial; sigue
+ * sin pedirse ningún documento DEL VEHÍCULO (tarjeta de circulación, etc.).
  */
 export const idTypes = [
   { value: "ine", label: "INE / IFE", detail: "Credencial para votar vigente" },
   { value: "pasaporte", label: "Pasaporte", detail: "Pasaporte mexicano vigente" },
-  { value: "cedula", label: "Cédula profesional", detail: "Emitida por la SEP" },
+  {
+    value: "licencia",
+    label: "Licencia de conducir",
+    detail: "Licencia vigente con fotografía",
+  },
 ] as const;
 
 export type IdTypeValue = (typeof idTypes)[number]["value"];
@@ -213,6 +229,37 @@ export const idGuidelines = {
     ],
     dont: ["Fotos borrosas", "Documento parcialmente fuera del encuadre", "Fotocopias"],
   },
+} as const;
+
+/**
+ * Comprobante de domicilio.
+ * Se acepta cualquiera de los habituales; no se exige uno concreto para no
+ * complicar el alta.
+ */
+export const proofOfAddressTypes = [
+  "Recibo de luz (CFE)",
+  "Recibo de agua",
+  "Recibo de teléfono o internet",
+  "Recibo de gas",
+  "Predial",
+  "Estado de cuenta bancario",
+  "Contrato de arrendamiento",
+];
+
+export const proofOfAddressGuideline = {
+  title: "Comprobante de domicilio",
+  hint: "Cualquiera de los habituales, con antigüedad máxima de 3 meses",
+  do: [
+    "Documento completo y legible",
+    "Que se vean el domicilio y la fecha",
+    "Con no más de 3 meses de antigüedad",
+    "Fotografía o escaneo nítido",
+  ],
+  dont: [
+    "Documentos cortados o parcialmente fuera del encuadre",
+    "Fotos borrosas o con reflejos",
+    "Comprobantes vencidos",
+  ],
 } as const;
 
 /* --------------------------------------------------------------------------

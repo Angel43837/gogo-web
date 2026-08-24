@@ -65,8 +65,14 @@ export function DriverStepVehicle({
                     className="sr-only"
                     {...register("vehicle")}
                   />
-                  <span className="text-3xl" aria-hidden>
-                    {vehicle.emoji}
+                  <span
+                    className={cn(
+                      "flex h-14 w-14 shrink-0 items-center justify-center rounded-full transition-colors duration-200",
+                      active ? "bg-primary text-white" : "bg-primary/10 text-primary",
+                    )}
+                    aria-hidden
+                  >
+                    <vehicle.icon className="h-7 w-7" />
                   </span>
                   <span className="flex-1">
                     <span className="block text-base font-black tracking-tight text-foreground">
