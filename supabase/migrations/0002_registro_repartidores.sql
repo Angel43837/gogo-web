@@ -122,7 +122,12 @@ create table if not exists public.drivers (
   -- Comprobante de domicilio, en el mismo bucket privado.
   proof_of_address_path text,
   photo_url     text,
-  status        text not null default 'en_revision',
+  -- Estado inicial del repartidor.
+  --   Aprobación automática -> 'aprobado'
+  --   Revisión manual       -> 'en_revision'
+  -- Debe decidirse AQUÍ, no en el cliente: si el navegador manda el estado,
+  -- cualquiera puede aprobarse solo manipulando la petición.
+  status        text not null default 'aprobado',
   -- Constancia de las tres aceptaciones del registro.
   safety_ack_at     timestamptz,
   disclaimer_ack_at timestamptz,
@@ -149,4 +154,23 @@ create policy "drivers_crea_lo_suyo"
   with check (id = auth.uid());
 
 create index if not exists drivers_status_idx on public.drivers (status);
+
+-- El repartidor NO debe poder cambiar su propio estado. La política de
+-- inserción de arriba permite crear la fila, pero conviene además impedir
+-- que la actualice: los cambios de estado los hace el personal de revisión
+-- con service_role, que salta RLS.
+-- (No se crea ninguna policy de UPDATE para 'authenticated' a propósito.)
+
+-- Aprobación DIFERIDA (opcional): si prefieres que pasen a 'aprobado' tras
+-- unos minutos en lugar de al instante, deja el default en 'en_revision' y
+-- programa esto con pg_cron:
+--
+--   select cron.schedule(
+--     'aprobar-repartidores',
+--     '* * * * *',
+--     $update public.drivers
+--          set status = 'aprobado'
+--        where status = 'en_revision'
+--          and created_at < now() - interval '1 minute'$
+--   );
 create unique index if not exists drivers_phone_idx on public.drivers (phone);

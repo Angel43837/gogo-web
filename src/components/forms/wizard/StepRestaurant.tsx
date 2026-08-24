@@ -8,7 +8,7 @@ import { ChipGroup } from "@/components/forms/FormShell";
 import { LocationPicker } from "@/components/forms/wizard/LocationPicker";
 import { StepActions, StepHeader } from "@/components/forms/wizard/StepShell";
 import { mexicanStates } from "@/data/restaurantRegistration";
-import { restaurantCategories } from "@/data/restaurantCategories";
+import { restaurantCategoryGroups } from "@/data/restaurantCategories";
 import { step2Schema, type Step2 } from "@/lib/restaurantRegistration";
 
 /** Paso 2 — identidad y ubicación del establecimiento. */
@@ -87,8 +87,8 @@ export function StepRestaurant({
 
         <ChipGroup
           label="Categoría o tipo de comida"
-          description="Elige una o más: así te encuentran los clientes que buscan por categoría."
-          options={restaurantCategories}
+          description="Elige todas las que apliquen: así te encuentran los clientes que buscan por categoría."
+          groups={restaurantCategoryGroups}
           selected={categories}
           onToggle={toggleCategory}
           error={errors.categories?.message}

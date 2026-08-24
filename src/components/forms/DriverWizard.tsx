@@ -13,7 +13,13 @@ import { DriverStepId } from "@/components/forms/wizard/DriverStepId";
 import { DriverStepPhoto } from "@/components/forms/wizard/DriverStepPhoto";
 import { DriverStepConfirm } from "@/components/forms/wizard/DriverStepConfirm";
 import { DriverStatusTimeline } from "@/components/forms/wizard/DriverStatusTimeline";
-import { driverStatusById } from "@/data/driverRegistration";
+import {
+  approvalDelaySeconds,
+  approvalMode,
+  driverStatusById,
+  initialDriverStatus,
+} from "@/data/driverRegistration";
+import type { DriverStatus } from "@/data/driverRegistration";
 import { mainAppLink } from "@/lib/supabase";
 import type { PickedImage } from "@/lib/restaurantRegistration";
 import {
@@ -273,7 +279,33 @@ export function DriverWizard() {
 /** Pantalla final del registro de repartidor. */
 function DriverRegistrationComplete({ firstName }: { firstName: string }) {
   const appLink = mainAppLink("/moto");
-  const status = driverStatusById.en_revision;
+
+  const [status, setStatus] = useState<DriverStatus>(initialDriverStatus);
+  const [secondsLeft, setSecondsLeft] = useState(
+    approvalMode === "diferida" ? approvalDelaySeconds : 0,
+  );
+
+  /*
+   * Aprobación diferida: espera puramente visual. Nadie revisa nada durante
+   * ese tiempo y el estado real no depende de este temporizador.
+   */
+  useEffect(() => {
+    if (approvalMode !== "diferida" || status !== "en_revision") return;
+    const id = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          clearInterval(id);
+          setStatus("aprobado");
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [status]);
+
+  const badge = driverStatusById[status];
+  const approved = status === "aprobado";
 
   return (
     <div className="flex flex-col gap-6">
@@ -293,7 +325,9 @@ function DriverRegistrationComplete({ firstName }: { firstName: string }) {
 
         <div className="mx-auto mt-6 max-w-md space-y-3 text-left">
           <p className="text-sm leading-relaxed text-muted">
-            El siguiente paso es descargar nuestra{" "}
+            {approved
+              ? "Tu cuenta ya está aprobada. El siguiente paso es descargar nuestra "
+              : "Mientras revisamos tus datos puedes ir descargando nuestra "}
             <strong className="text-foreground">aplicación para repartidores</strong>.
           </p>
           <p className="text-sm leading-relaxed text-muted">
@@ -303,10 +337,13 @@ function DriverRegistrationComplete({ firstName }: { firstName: string }) {
         </div>
 
         <div
-          className={`mx-auto mt-7 inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-sm font-bold ${status.tone}`}
+          className={`mx-auto mt-7 inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-sm font-bold ${badge.tone}`}
         >
-          <status.icon className="h-4 w-4" aria-hidden />
-          {status.label}
+          <badge.icon className="h-4 w-4" aria-hidden />
+          {badge.label}
+          {approvalMode === "diferida" && !approved && secondsLeft > 0 && (
+            <span className="font-mono tabular-nums">{secondsLeft}s</span>
+          )}
         </div>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -325,11 +362,13 @@ function DriverRegistrationComplete({ firstName }: { firstName: string }) {
 
         <p className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-muted">
           <Smartphone className="h-3.5 w-3.5" aria-hidden />
-          Te avisaremos cuando tu cuenta esté lista para comenzar.
+          {approved
+            ? "Entra con tu correo y contraseña para empezar a recibir pedidos."
+            : "Te avisaremos cuando tu cuenta esté lista para comenzar."}
         </p>
       </FormCard>
 
-      <DriverStatusTimeline current="en_revision" />
+      <DriverStatusTimeline current={status} />
     </div>
   );
 }

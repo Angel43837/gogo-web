@@ -75,47 +75,71 @@ export function FormSuccess({ children }: { children: ReactNode }) {
   );
 }
 
-/** Grupo de chips seleccionables (categorías del restaurante). */
+type ChipSection = { label: string; items: readonly string[] };
+
+/**
+ * Grupo de chips seleccionables (categorías del restaurante).
+ *
+ * Con `groups` se pintan por secciones: con muchas opciones se lee bastante
+ * mejor que una única lista larga. Con `options` se comporta como antes.
+ */
 export function ChipGroup({
   options,
+  groups,
   selected,
   onToggle,
   label,
   description,
   error,
 }: {
-  options: readonly string[];
+  options?: readonly string[];
+  groups?: readonly ChipSection[];
   selected: string[];
   onToggle: (value: string) => void;
   label: string;
   description?: string;
   error?: string;
 }) {
+  const sections: readonly ChipSection[] = groups ?? [{ label: "", items: options ?? [] }];
+
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm font-bold text-foreground">{label}</span>
       {description && <p className="text-xs text-muted">{description}</p>}
-      <div className="mt-1 flex flex-wrap gap-2" role="group" aria-label={label}>
-        {options.map((option) => {
-          const active = selected.includes(option);
-          return (
-            <button
-              key={option}
-              type="button"
-              aria-pressed={active}
-              onClick={() => onToggle(option)}
-              className={cn(
-                "rounded-pill border px-3.5 py-2 text-sm font-semibold transition-all duration-200 ease-gogo",
-                active
-                  ? "border-primary bg-primary text-primary-fg shadow-[0_6px_16px_rgb(var(--color-primary)/0.28)]"
-                  : "border-border bg-white text-foreground hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary",
-              )}
-            >
-              {option}
-            </button>
-          );
-        })}
+
+      <div className="mt-1 flex flex-col gap-4" role="group" aria-label={label}>
+        {sections.map((section) => (
+          <div key={section.label || "todas"}>
+            {section.label && (
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">
+                {section.label}
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2">
+              {section.items.map((option) => {
+                const active = selected.includes(option);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => onToggle(option)}
+                    className={cn(
+                      "rounded-pill border px-3.5 py-2 text-sm font-semibold transition-all duration-200 ease-gogo",
+                      active
+                        ? "border-primary bg-primary text-primary-fg shadow-[0_6px_16px_rgb(var(--color-primary)/0.28)]"
+                        : "border-border bg-white text-foreground hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary",
+                    )}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
+
       {error && (
         <p className="flex items-center gap-1.5 text-xs font-medium text-red-600">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />

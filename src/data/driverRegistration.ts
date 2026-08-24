@@ -336,3 +336,38 @@ export const driverDisclaimer: DisclaimerPoint[] = [
     needsLegalReview: true,
   },
 ];
+
+/* --------------------------------------------------------------------------
+   Política de aprobación
+   -------------------------------------------------------------------------- */
+
+export type ApprovalMode = "manual" | "automatica" | "diferida";
+
+/**
+ * Cómo se aprueba a un repartidor tras enviar su registro.
+ *
+ *   manual      -> queda "en revisión" hasta que alguien lo apruebe a mano.
+ *   automatica  -> queda "aprobado" en cuanto envía, si los documentos están
+ *                  completos (el formulario ya lo exige para poder enviar).
+ *   diferida    -> queda "en revisión" y pasa solo a "aprobado" tras
+ *                  `approvalDelaySeconds`.
+ *
+ * OJO: en producción esto NO puede decidirse en el navegador. La transición
+ * de estado tiene que ocurrir del lado del servidor (valor por defecto en la
+ * base de datos, función programada o webhook del verificador), o cualquiera
+ * podría aprobarse solo manipulando el cliente.
+ */
+export const approvalMode = "diferida" as ApprovalMode;
+
+/**
+ * Segundos de espera cuando `approvalMode` es "diferida".
+ *
+ * Es una espera COSMÉTICA: nadie revisa nada durante ese tiempo. En producción
+ * la cuenta queda aprobada en la base de datos desde el primer momento y esto
+ * solo retrasa lo que ve el repartidor en pantalla.
+ */
+export const approvalDelaySeconds = 17;
+
+/** Estado en el que queda el repartidor justo después de enviar el registro. */
+export const initialDriverStatus: DriverStatus =
+  approvalMode === "automatica" ? "aprobado" : "en_revision";
