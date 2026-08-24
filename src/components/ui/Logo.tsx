@@ -10,7 +10,15 @@ import { cn } from "@/lib/utils";
  * sola fila), guárdala como /logo/gogo-wordmark.svg y cambia solo esta línea:
  * se leerá mucho mejor al tamaño del texto.
  */
-const INLINE_LOGO_SRC = "/logo/gogo-logo.svg";
+/**
+ * Versiones horizontales del logotipo, para usarlo DENTRO de un texto.
+ * Se eligen según la palabra que sustituyen, para que el renglón siga
+ * leyéndose igual: "GOGO" -> wordmark, "GOGO FOOD" -> wordmark con FOOD.
+ */
+const INLINE_WORDMARKS = {
+  gogo: { src: "/logo/gogo-wordmark.png", width: 2210, height: 569, alt: "GOGO" },
+  food: { src: "/logo/gogo-wordmark-food.png", width: 2210, height: 888, alt: "GOGO FOOD" },
+} as const;
 
 type LogoProps = {
   /**
@@ -76,9 +84,12 @@ export function Logo({ variant = "badge", className, size = 44, href = "/", prio
  * Se dimensiona en `em`, de modo que crece y encoge con el texto que lo rodea.
  */
 export function InlineLogo({
+  word = "gogo",
   variant = "badge",
   className,
 }: {
+  /** Qué palabra sustituye: "GOGO" o "GOGO FOOD". */
+  word?: keyof typeof INLINE_WORDMARKS;
   /**
    * `badge` : placa naranja. Para fondos claros neutros.
    * `dark`  : placa oscura. Para fondos NARANJAS, donde una placa naranja no
@@ -88,23 +99,35 @@ export function InlineLogo({
   variant?: "badge" | "dark" | "plain";
   className?: string;
 }) {
+  const mark = INLINE_WORDMARKS[word];
+  const withPlate = variant !== "plain";
+
   return (
     <span
       className={cn(
-        "relative top-[0.08em] mx-[0.1em] inline-flex h-[1.5em] items-center justify-center align-middle",
+        "relative top-[0.06em] mx-[0.12em] inline-flex items-center justify-center align-middle",
+        // El lockup con FOOD es más alto, así que necesita algo más de caja.
+        word === "food" ? "h-[1.9em]" : "h-[1.35em]",
         variant === "badge" &&
-          "rounded-md bg-primary px-[0.28em] shadow-[0_2px_6px_rgb(var(--color-primary)/0.35)]",
+          "rounded-md bg-primary px-[0.3em] shadow-[0_2px_6px_rgb(var(--color-primary)/0.35)]",
         variant === "dark" &&
-          "rounded-md bg-onBrand px-[0.28em] shadow-[0_2px_6px_rgba(0,0,0,0.25)]",
+          "rounded-md bg-onBrand px-[0.3em] shadow-[0_2px_6px_rgba(0,0,0,0.25)]",
         className,
       )}
     >
       <Image
-        src={INLINE_LOGO_SRC}
-        alt="GOGO"
-        width={312}
-        height={362}
-        className="h-[1.15em] w-auto object-contain"
+        src={mark.src}
+        alt={mark.alt}
+        width={mark.width}
+        height={mark.height}
+        // Se sirve pequeño: nunca se pinta a más de ~120 px de ancho.
+        sizes="140px"
+        className={cn(
+          "w-auto object-contain",
+          word === "food" ? "h-[1.45em]" : "h-[0.85em]",
+          // Sin placa el logotipo va suelto sobre el fondo oscuro.
+          !withPlate && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]",
+        )}
       />
     </span>
   );

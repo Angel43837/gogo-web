@@ -37,7 +37,7 @@ export function SuccessPanel({
       {highlight && (
         <p className="mt-4 text-base text-muted">
           <span className="font-bold text-foreground">{highlight}</span> ya está en{" "}
-          <InlineLogo />
+          <InlineLogo word="food" />
         </p>
       )}
 
