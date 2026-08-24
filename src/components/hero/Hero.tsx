@@ -5,6 +5,7 @@ import { ArrowRight, Bike, Download, MapPin, PackageCheck, Store, UtensilsCrosse
 import { PhoneMockup, ScreenTracking } from "@/components/ui/PhoneMockup";
 import { CTAButton } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { FloatingBadge } from "@/components/hero/FloatingBadge";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -62,7 +63,8 @@ export function Hero() {
             transition={{ duration: 0.65, delay: 0.14, ease }}
             className="mt-6 max-w-xl text-base font-medium leading-relaxed text-onBrand text-pretty sm:text-lg"
           >
-            GOGO es la plataforma que conecta a quienes quieren pedir, a los restaurantes que quieren
+            <InlineLogo variant="dark" /> es la plataforma que conecta a quienes quieren pedir, a los
+            restaurantes que quieren
             vender y a los repartidores que llevan cada pedido hasta la puerta. Un solo ecosistema,
             tres formas de participar.
           </motion.p>

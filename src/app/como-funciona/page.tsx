@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/sections/PageHero";
+import { InlineLogo } from "@/components/ui/Logo";
 import { WhatIsGogo } from "@/components/sections/WhatIsGogo";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { FinalCTA } from "@/components/sections/FinalCTA";
@@ -22,7 +23,12 @@ export default function ComoFuncionaPage() {
             Del antojo a la puerta, <span className="text-brand-gradient">paso a paso.</span>
           </>
         }
-        description="GOGO coordina a tres protagonistas en cada pedido. Aquí puedes ver cómo encaja cada uno."
+        description={
+          <>
+            <InlineLogo variant="dark" /> coordina a tres protagonistas en cada pedido. Aquí puedes
+            ver cómo encaja cada uno.
+          </>
+        }
       />
       <ProcessTimeline />
       <WhatIsGogo />

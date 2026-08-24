@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { CTAButton } from "@/components/ui/Button";
 import { FormCard } from "@/components/forms/FormShell";
+import { InlineLogo } from "@/components/ui/Logo";
 
 /** Pantalla de confirmación tras completar un registro. */
 export function SuccessPanel({
@@ -36,7 +37,7 @@ export function SuccessPanel({
       {highlight && (
         <p className="mt-4 text-base text-muted">
           <span className="font-bold text-foreground">{highlight}</span> ya está en{" "}
-          <span className="font-black text-primary">GOGO FOOD</span>
+          <InlineLogo />
         </p>
       )}
 

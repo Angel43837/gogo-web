@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui/Logo";
+import { InlineLogo, Logo } from "@/components/ui/Logo";
 import { StoreButtons } from "@/components/ui/StoreButtons";
 import { footerNav, site } from "@/lib/site";
 import { PENDING } from "@/lib/utils";
@@ -25,7 +25,8 @@ export function Footer() {
           <div className="max-w-sm">
             <Logo variant="light" size={64} />
             <p className="mt-5 text-sm leading-relaxed text-white/60">
-              GOGO conecta personas, restaurantes y repartidores en una sola plataforma de delivery.
+              <InlineLogo variant="plain" /> conecta personas, restaurantes y repartidores en una
+              sola plataforma de delivery.
             </p>
             <div className="mt-6">
               <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-white/45">

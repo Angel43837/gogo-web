@@ -2,6 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+/**
+ * Archivo del logotipo que se usa EN LÍNEA dentro de un texto.
+ *
+ * Ahora apunta al lockup apilado, que es el único horizontal-compatible que
+ * hay en el proyecto. Cuando exista la versión horizontal (el "GOGO" en una
+ * sola fila), guárdala como /logo/gogo-wordmark.svg y cambia solo esta línea:
+ * se leerá mucho mejor al tamaño del texto.
+ */
+const INLINE_LOGO_SRC = "/logo/gogo-logo.svg";
+
 type LogoProps = {
   /**
    * `badge`: el logotipo oficial sobre la placa naranja de marca (para fondos claros).
@@ -54,5 +64,48 @@ export function Logo({ variant = "badge", className, size = 44, href = "/", prio
     <Link href={href} aria-label="GOGO FOOD — Inicio" className="group/logo inline-flex rounded-xl">
       {content}
     </Link>
+  );
+}
+
+/**
+ * Logotipo en línea, dentro de un texto corrido.
+ *
+ * El logotipo es blanco y celeste, así que sobre fondos claros necesita una
+ * placa detrás para verse. Nunca se recolorea ni se deforma el archivo.
+ *
+ * Se dimensiona en `em`, de modo que crece y encoge con el texto que lo rodea.
+ */
+export function InlineLogo({
+  variant = "badge",
+  className,
+}: {
+  /**
+   * `badge` : placa naranja. Para fondos claros neutros.
+   * `dark`  : placa oscura. Para fondos NARANJAS, donde una placa naranja no
+   *           se distinguiría y el texto que la rodea ya es oscuro.
+   * `plain` : sin placa. Solo para fondos oscuros, donde el logotipo se lee solo.
+   */
+  variant?: "badge" | "dark" | "plain";
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "relative top-[0.08em] mx-[0.1em] inline-flex h-[1.5em] items-center justify-center align-middle",
+        variant === "badge" &&
+          "rounded-md bg-primary px-[0.28em] shadow-[0_2px_6px_rgb(var(--color-primary)/0.35)]",
+        variant === "dark" &&
+          "rounded-md bg-onBrand px-[0.28em] shadow-[0_2px_6px_rgba(0,0,0,0.25)]",
+        className,
+      )}
+    >
+      <Image
+        src={INLINE_LOGO_SRC}
+        alt="GOGO"
+        width={312}
+        height={362}
+        className="h-[1.15em] w-auto object-contain"
+      />
+    </span>
   );
 }

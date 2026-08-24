@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowRight, Bike, Store, UtensilsCrossed } from "lucide-react";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { InlineLogo } from "@/components/ui/Logo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/animations/Reveal";
 
 const nodes = [
@@ -21,7 +22,12 @@ export function WhatIsGogo() {
               <span className="text-brand-gradient">tres protagonistas.</span>
             </>
           }
-          description="GOGO conecta personas, restaurantes y repartidores en una sola plataforma. Cada pedido pone en movimiento a los tres."
+          description={
+            <>
+              <InlineLogo /> conecta personas, restaurantes y repartidores en una sola
+              plataforma. Cada pedido pone en movimiento a los tres.
+            </>
+          }
           className="mx-auto max-w-3xl"
         />
 
