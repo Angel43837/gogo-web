@@ -64,13 +64,19 @@ npm run dev
 
 ## Seguridad de las credenciales
 
-Antes de cada push conviene verificar que no se cuela ninguna clave:
+Antes de cada push conviene verificar que no se cuela ninguna clave. Este
+comando compara contra la clave real de tu `.env.local`, sin escribirla en
+ningún sitio:
 
 ```bash
-git diff origin/main..main | grep -c "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+set -a && . ./.env.local && set +a
+git diff origin/main..main | grep -c "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
 ```
 
 Debe devolver `0`. Se ha comprobado en todos los push hasta ahora.
+
+> No busques por el prefijo `eyJhbGci...`: es solo la cabecera común a todos
+> los JWT y da falsos positivos. Compara siempre contra la clave completa.
 
 El repositorio es **privado**, pero eso no sustituye a mantener las claves fuera del código: guárdalas en un gestor de contraseñas o en las variables de entorno del hosting.
 
