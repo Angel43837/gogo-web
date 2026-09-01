@@ -21,6 +21,7 @@ import {
 } from "@/data/driverRegistration";
 import type { DriverStatus } from "@/data/driverRegistration";
 import { mainAppLink } from "@/lib/supabase";
+import { submitDriverRegistration } from "@/lib/realSubmission";
 import type { PickedImage } from "@/lib/restaurantRegistration";
 import {
   clearDriverDraft,
@@ -44,7 +45,7 @@ import {
    otro público para la foto de perfil, y comprobación de duplicados.
    Después basta con poner esta constante en `false`.
    ========================================================================== */
-const SIMULATION = true;
+const SIMULATION = false;
 
 const steps: StepMeta[] = [
   { id: 1, label: "Datos personales", short: "Datos" },
@@ -129,8 +130,21 @@ export function DriverWizard() {
       return;
     }
 
-    setSubmitting(false);
-    setError("El envío real todavía no está habilitado en este entorno.");
+    if (!step1 || !step2 || !step3 || !step4) {
+      setSubmitting(false);
+      setError("Faltan datos del formulario. Vuelve a los pasos anteriores.");
+      return;
+    }
+
+    try {
+      await submitDriverRegistration(step1, step2, step3, step4, photo, idFront, idBack, proofOfAddress);
+      setSubmitting(false);
+      setDone(true);
+      clearDriverDraft();
+    } catch (e) {
+      setSubmitting(false);
+      setError(e instanceof Error ? e.message : "No se pudo completar el registro. Intenta de nuevo.");
+    }
   };
 
   if (done) {

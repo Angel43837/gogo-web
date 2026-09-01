@@ -14,6 +14,7 @@ import { StepConfirm } from "@/components/forms/wizard/StepConfirm";
 import { StatusTimeline } from "@/components/forms/wizard/StatusTimeline";
 import { statusById } from "@/data/restaurantRegistration";
 import { mainAppLink } from "@/lib/supabase";
+import { submitRestaurantRegistration } from "@/lib/realSubmission";
 import {
   clearDraft,
   loadDraft,
@@ -36,7 +37,7 @@ import {
    Para conectarlo de verdad: aplicar la migración SQL, crear el bucket y
    poner esta constante en `false`.
    ========================================================================== */
-const SIMULATION = true;
+const SIMULATION = false;
 
 const steps: StepMeta[] = [
   { id: 1, label: "Datos del responsable", short: "Responsable" },
@@ -110,9 +111,21 @@ export function RestaurantWizard() {
       return;
     }
 
-    // Ruta real: pendiente de la migración de esquema y del bucket de imágenes.
-    setSubmitting(false);
-    setError("El envío real todavía no está habilitado en este entorno.");
+    if (!step1 || !step2 || !step3) {
+      setSubmitting(false);
+      setError("Faltan datos del formulario. Vuelve a los pasos anteriores.");
+      return;
+    }
+
+    try {
+      await submitRestaurantRegistration(step1, step2, step3, logo, cover);
+      setSubmitting(false);
+      setDone(true);
+      clearDraft();
+    } catch (e) {
+      setSubmitting(false);
+      setError(e instanceof Error ? e.message : "No se pudo completar el registro. Intenta de nuevo.");
+    }
   };
 
   if (done) {
